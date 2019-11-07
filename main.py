@@ -1,7 +1,6 @@
 def data_input():
     return input().split()
 
-
 def conc(set1, set2, k):
     list1 = list(set1)
     list2 = list(set2)
@@ -11,6 +10,19 @@ def conc(set1, set2, k):
             new_set.add((i + j) % k)
     return new_set
 
+def gcd(m, n):
+    if m == 0:
+        return n
+    return gcd(n % m, m)
+
+def degree(set_of_remains, k):
+    answer_set = set()
+    list_from_set = list(set_of_remains)
+    for i in list_from_set:
+        div = gcd(i, k)
+        for j in range(k // div + 1):
+            answer_set.add(i * j % k)
+    return answer_set
 
 def update_words_len(str, k):
     stack = []
@@ -22,9 +34,8 @@ def update_words_len(str, k):
         elif str[0] == '*':
             if len(stack) == 0:
                 return True, set()
-            if stack[-1] != {0}:
-                stack.pop()
-                stack.append(set([i for i in range(k)]))
+            set_from_stack = stack.pop()
+            stack.append(degree(set_from_stack, k))
         elif str[0] == '+':
             if len(stack) < 2:
                 return True, set()
@@ -45,7 +56,6 @@ def update_words_len(str, k):
         return False, stack[0]
     else:
         return True, set()
-
 
 def find_answer(input_tuple):
     input_str = input_tuple[0]
